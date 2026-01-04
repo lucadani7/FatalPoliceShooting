@@ -252,6 +252,9 @@ export default function Dashboard() {
                                             target="_blank" rel="noopener noreferrer"
                                             style={{color: '#3b82f6', textDecoration: 'none', fontWeight: 600}}>The
                             Washington Post (via GitHub)</a> (2015 - Present)
+                            <p>
+                                <em>In cases where information is incomplete in official reports, it is marked as <strong>UNKNOWN</strong>.</em>
+                            </p>
                         </p>
                     </div>
                 </header>
