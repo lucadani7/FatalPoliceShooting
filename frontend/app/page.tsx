@@ -305,7 +305,7 @@ export default function Dashboard() {
                         background: '#0f172a',
                         color: 'white',
                         textAlign: 'center',
-                        minHeight: '160px',
+                        minHeight: '180px',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
