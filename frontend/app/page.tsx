@@ -518,24 +518,30 @@ export default function Dashboard() {
                         <footer style={{
                             marginTop: '50px',
                             padding: '30px 0',
-                            textAlign: 'center',
                             borderTop: '1px solid #e2e8f0',
-                            color: '#94a3b8',
-                            fontSize: '12px'
+                            textAlign: 'center',
+                            color: '#64748b',
+                            fontSize: '14px'
                         }}>
-                            <p style={{margin: '0 0 5px 0'}}>Designed and Developed by <strong>Luca Daniel
-                                Ionescu</strong></p>
-                            <div style={{marginBottom: '10px', display: 'flex', justifyContent: 'center', gap: '15px'}}>
-                                <a href="https://github.com/lucadani7/FatalPoliceShooting" target="_blank"
-                                   rel="noopener noreferrer"
-                                   style={{color: '#3b82f6', textDecoration: 'none', fontWeight: 600}}>Source Code</a>
-                                <span>|</span>
-                                <a href="https://github.com/lucadani7" target="_blank" rel="noopener noreferrer"
-                                   style={{color: '#3b82f6', textDecoration: 'none', fontWeight: 600}}>GitHub
-                                    Profile</a>
+                            <div style={{marginBottom: '10px'}}>
+                                Designed and Developed by <strong>Luca Daniel Ionescu</strong>
                             </div>
-                            <p style={{margin: 0}}>© {new Date().getFullYear()} Fatal Police Shooting Project | Inspired
-                                by Stanford Nifty Assignments</p>
+
+                            <div style={{marginBottom: '10px'}}>
+                                <a href="https://github.com/lucadani7/FatalPoliceShooting" target="_blank"
+                                   style={{color: '#3b82f6', textDecoration: 'none'}}>Source Code</a>
+                                <span style={{margin: '0 10px', color: '#cbd5e1'}}>|</span>
+                                <a href="https://github.com/lucadani7" target="_blank"
+                                   style={{color: '#3b82f6', textDecoration: 'none'}}>GitHub Profile</a>
+                            </div>
+
+                            <div style={{fontSize: '12px', color: '#94a3b8'}}>
+                                © 2026 Fatal Police Shooting Project | Inspired by
+                                <a href="http://nifty.stanford.edu/2023/lynn-fatal-police-shootings/" target="_blank"
+                                   style={{color: '#94a3b8', textDecoration: 'underline', marginLeft: '4px'}}>
+                                    Stanford Nifty Assignments
+                                </a>
+                            </div>
                         </footer>
                     </>
                 )}
