@@ -174,8 +174,6 @@ export default function Dashboard() {
         fetchData();
     }, [selectedState]);
 
-    const formatSmartPercent = (value: number) => value.toFixed(2);
-
     const exportToCSV = () => {
         const headers = ["Name", "City", "State", "Armed Status", "Body Camera"];
         const rows = filteredAndSorted.map(item => [
@@ -257,6 +255,10 @@ export default function Dashboard() {
                                             target="_blank" rel="noopener noreferrer"
                                             style={{color: '#3b82f6', textDecoration: 'none', fontWeight: 600}}>The
                             Washington Post (via GitHub)</a> (2015 - Present)
+                            <p>
+                                <em>In cases where information is incomplete in official reports, it is marked
+                                    as <strong>UNKNOWN</strong>.</em>
+                            </p>
                         </p>
                     </div>
                 </header>
@@ -365,19 +367,42 @@ export default function Dashboard() {
                             <div style={{height: 350}}>
                                 <ResponsiveContainer>
                                     <PieChart>
-                                        <Pie data={data} innerRadius={70} outerRadius={100} dataKey="count"
-                                             nameKey="race" stroke="none" paddingAngle={5}>
-                                            {data.map((entry, index) => <Cell key={index}
-                                                                              fill={RACE_COLORS[entry.race] || '#94a3b8'}/>)}
+                                        <Pie
+                                            data={data}
+                                            innerRadius={70}
+                                            outerRadius={100}
+                                            dataKey="count"
+                                            nameKey="race"
+                                            stroke="none"
+                                            paddingAngle={5}
+                                        >
+                                            {data.map((entry, index) => (
+                                                <Cell key={index} fill={RACE_COLORS[entry.race] || '#94a3b8'}/>
+                                            ))}
                                         </Pie>
-                                        <Tooltip
-                                            formatter={(value: any, name: any) => [`${value} cases (${formatSmartPercent((Number(value) / data.reduce((acc, curr) => acc + curr.count, 0)) * 100)}%)`, String(name)]}/>
-                                        <Legend verticalAlign="bottom" align="center" formatter={(value: any) => <span
-                                            style={{
-                                                color: '#475569',
-                                                fontSize: '11px',
-                                                fontWeight: 600
-                                            }}>{value}</span>}/>
+
+                                        <Tooltip formatter={(value: any, name: any) => {
+                                            const total = data.reduce((acc, curr) => acc + curr.count, 0);
+                                            const p = total > 0 ? (Number(value) / total) * 100 : 0;
+                                            return [`${value} cases (${p.toFixed(2)}%)`, String(name)];
+                                        }}/>
+
+                                        <Legend
+                                            verticalAlign="bottom"
+                                            align="center"
+                                            formatter={(value, entry: any) => {
+                                                const total = data.reduce((acc, curr) => acc + curr.count, 0);
+                                                const val = entry.payload.count;
+                                                const p = total > 0 ? (val / total) * 100 : 0;
+                                                return (
+                                                    <span style={{
+                                                        color: '#475569',
+                                                        fontSize: '11px',
+                                                        fontWeight: 600
+                                                    }}>{value} ({p.toFixed(2)}%)</span>
+                                                );
+                                            }}
+                                        />
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
@@ -506,6 +531,13 @@ export default function Dashboard() {
                         <span style={{margin: '0 10px', color: '#cbd5e1'}}>|</span>
                         <a href="https://github.com/lucadani7" target="_blank"
                            style={{color: '#3b82f6', textDecoration: 'none'}}>GitHub Profile</a>
+                    </div>
+                    <div style={{fontSize: '12px', color: '#94a3b8'}}>
+                        © {new Date().getFullYear()} Fatal Police Shooting Project | Inspired by
+                        <a href="http://nifty.stanford.edu/2023/lynn-fatal-police-shootings/" target="_blank"
+                           style={{color: '#94a3b8', textDecoration: 'underline', marginLeft: '4px'}}>
+                            Stanford Nifty Assignments
+                        </a>
                     </div>
                 </footer>
             </div>
