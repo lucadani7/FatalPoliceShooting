@@ -43,18 +43,11 @@ interface Stat {
     [key: string]: string | number;
 }
 
-const raceNames: { [key: string]: string } = {
-    'W': 'White', 'B': 'Black', 'H': 'Hispanic', 'B;H': 'Multiracial',
-    'A': 'Asian', 'N': 'Native American', 'O': 'Other', 'Unknown': 'Unknown/Pending'
-};
-
 const RACE_COLORS: { [key: string]: string } = {
     'White': '#3b82f6', 'Black': '#1f2937', 'Hispanic': '#f97316',
     'Asian': '#10b981', 'Native American': '#eab308', 'Multiracial': '#8b5cf6',
     'Other': '#ef4444', 'Unknown': '#94a3b8'
 };
-
-const statsMap: Record<string, number> = {};
 
 const US_STATES_MAP: { [key: string]: string } = {
     "All": "All States",
@@ -132,15 +125,32 @@ export default function Dashboard() {
             }
             const {data: supabaseData, error} = await query;
             if (!error && supabaseData) {
+                const raceNames: { [key: string]: string } = {
+                    'W': 'White',
+                    'B': 'Black',
+                    'H': 'Hispanic',
+                    'A': 'Asian',
+                    'N': 'Native American',
+                    'O': 'Other',
+                    'Multiracial': 'Multiracial',
+                    'Unknown': 'Unknown/Pending'
+                };
                 const statsMap: { [key: string]: number } = {};
                 supabaseData.forEach(item => {
-                    const rawRace = item.race;
-                    let finalRaceName = !rawRace || rawRace.trim() === "" || rawRace.trim().toLowerCase() === "unknown" || rawRace.trim().toLowerCase() === "none" ? 'Unknown/Pending' : raceNames[rawRace.trim()] || rawRace.trim();
-                    statsMap[finalRaceName] = (statsMap[finalRaceName] || 0) + 1;
+                    const rawRace = item.race ? item.race.trim() : "";
+                    let finalKey: string;
+                    if (!rawRace || rawRace === "" || rawRace.toLowerCase() === "unknown") {
+                        finalKey = 'Unknown';
+                    } else if (rawRace.includes(';')) {
+                        finalKey = 'Multiracial';
+                    } else {
+                        finalKey = rawRace;
+                    }
+                    statsMap[finalKey] = (statsMap[finalKey] || 0) + 1;
                 });
                 const total = supabaseData.length;
                 const formattedStats = Object.keys(statsMap).map(name => ({
-                    race: name,
+                    race: raceNames[name] || "Other",
                     count: statsMap[name],
                     percentage: (statsMap[name] / total) * 100
                 }));
