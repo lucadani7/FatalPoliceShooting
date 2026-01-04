@@ -515,6 +515,42 @@ export default function Dashboard() {
                     </div>
                 </div>
 
+                <div id="about-section" className="card"
+                     style={{marginTop: '40px', backgroundColor: '#f1f5f9', border: 'none'}}>
+                    <h2 style={{fontSize: '1.5rem', fontWeight: 800, marginBottom: '20px'}}>About this Project</h2>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        gap: '30px',
+                        fontSize: '13px',
+                        color: '#475569'
+                    }}>
+                        <div>
+                            <h4 style={{color: '#0f172a', marginBottom: '8px'}}>The Data Source</h4>
+                            <p>Sourced from <strong>The Washington Post</strong> database, tracking fatal shootings by
+                                officers since 2015.</p>
+                        </div>
+                        <div>
+                            <h4 style={{color: '#0f172a', marginBottom: '8px'}}>Why This Matters</h4>
+                            <p>Provides transparency and data-driven insights into law enforcement interventions,
+                                helping researchers and the public understand geographic and demographic trends.</p>
+                        </div>
+                    </div>
+                    <div style={{
+                        marginTop: '20px',
+                        padding: '15px',
+                        backgroundColor: '#fff7ed',
+                        borderRadius: '12px',
+                        border: '1px solid #ffedd5'
+                    }}>
+                        <h4 style={{fontSize: '11px', fontWeight: 800, color: '#9a3412', marginBottom: '5px'}}>⚠️
+                            DISCLAIMER</h4>
+                        <p style={{fontSize: '11px', color: '#7c2d12', margin: 0}}>This dashboard is for educational
+                            purposes. Data is provided "as is". The developer is NOT affiliated with The Washington Post
+                            or any governmental agency.</p>
+                    </div>
+                </div>
+
                 <footer style={{
                     marginTop: '50px',
                     padding: '30px 0',
