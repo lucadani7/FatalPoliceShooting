@@ -67,6 +67,6 @@ This project requires **Docker** and **Docker Compose** to manage the database e
 ## 🔒 Security
 All sensitive information is managed through Environment Variables and is strictly excluded from version control via .gitignore.
 
-## ## 📄 License
+## 📄 License
 
 This project is licensed under the Apache-2.0 License.
