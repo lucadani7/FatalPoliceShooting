@@ -5,7 +5,7 @@ A professional Full-Stack application designed to monitor, visualize, and analyz
 This project is organized as a **monorepo**, utilizing a hybrid infrastructure to balance development efficiency with production-grade stability:
 
 - **Frontend:** Next.js (Deployed on **Vercel**)
-- **Backend:** FastAPI / Python (Deployed on **Render**)
+- **Backend:** FastAPI / Python (Deployed on **GitHub Actions**)
 - **Database:** PostgreSQL 
   - **Production:** Managed by **Supabase** for 24/7 cloud availability.
   - **Local Development:** Isolated environment using **Docker Compose**.
@@ -67,6 +67,6 @@ This project requires **Docker** and **Docker Compose** to manage the database e
 ## 🔒 Security
 All sensitive information is managed through Environment Variables and is strictly excluded from version control via .gitignore.
 
-## ## 📄 License
+## 📄 License
 
 This project is licensed under the Apache-2.0 License.
