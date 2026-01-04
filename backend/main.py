@@ -114,10 +114,11 @@ def home():
     }
 
 def sync_data_to_supabase():
-    CSV_URL = "https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/fatal-police-shootings-data.csv"
+    CSV_URL = "https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/v2/fatal-police-shootings-data.csv"
     print(f"Downloading data from: {CSV_URL}")
     try:
-        df = pd.read_csv(CSV_URL)
+        storage_options = {'User-Agent': 'Mozilla/5.0'}
+        df = pd.read_csv(CSV_URL, storage_options=storage_options)
         df = df.dropna(subset=['id'])
         print(f"Loading {len(df)} rows in database...")
         df.to_sql('incidents', con=engine, if_exists='replace', index=False)
