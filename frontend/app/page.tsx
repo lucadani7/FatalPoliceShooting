@@ -45,20 +45,38 @@ interface Stat {
 
 const getPerfectPercentages = (stats: any[]) => {
     const total = stats.reduce((acc, curr) => acc + curr.count, 0);
-    if (total === 0) return stats;
-    let seats = stats.map(s => ({
-        ...s,
-        raw: (s.count / total) * 100,
-        integer: Math.floor((s.count / total) * 100),
-        remainder: ((s.count / total) * 100) % 1
-    }));
-    let currentSum = seats.reduce((acc, curr) => acc + curr.integer, 0);
+    if (total === 0) return [];
+    let currentSum = 0;
+    let seats = stats.map(s => {
+        const raw = (s.count / total) * 100;
+        const val = (s.count > 0 && raw < 1) ? 1 : Math.floor(raw);
+        currentSum += val;
+        return {
+            ...s,
+            integer: val,
+            remainder: raw % 1
+        };
+    });
     let diff = 100 - currentSum;
-    seats.sort((a, b) => b.remainder - a.remainder);
-    for (let i = 0; i < diff; i++) {
-        seats[i].integer += 1;
+
+    if (diff > 0) {
+        const sortedByRemainder = [...seats].sort((a, b) => b.remainder - a.remainder);
+        for (let i = 0; i < diff; i++) {
+            const targetRace = sortedByRemainder[i].race;
+            const index = seats.findIndex(s => s.race === targetRace);
+            if (index !== -1) seats[index].integer += 1;
+        }
+    } else if (diff < 0) {
+        const sortedByValue = [...seats].sort((a, b) => b.integer - a.integer);
+        for (let i = 0; i < Math.abs(diff); i++) {
+            const targetRace = sortedByValue[i].race;
+            const index = seats.findIndex(s => s.race === targetRace);
+            if (index !== -1 && seats[index].integer > 1) {
+                seats[index].integer -= 1;
+            }
+        }
     }
-    return seats.sort((a, b) => b.count - a.count);
+    return seats;
 };
 
 const RACE_COLORS: { [key: string]: string } = {
@@ -299,13 +317,20 @@ export default function Dashboard() {
                             fontSize: '12px'
                         }}>{US_STATES_MAP[selectedState]}</span>
                         {loading ? (
-                            <div style={{margin: '15px 0'}}><Skeleton width="180px" height="4rem" opacity={0.2}/></div>
-                        ) : (
                             <div style={{
-                                fontSize: '3.5rem',
-                                fontWeight: 800,
-                                margin: '10px 0'
-                            }}>{filteredAndSorted.length.toLocaleString()}</div>
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '10px',
+                                margin: '15px 0'
+                            }}>
+                                <Skeleton width="140px" height="3.5rem" opacity={0.2}/>
+                                <span style={{color: '#64748b', fontSize: '11px', fontWeight: 600}} className="animate-pulse">FETCHING LIVE DATA FROM SUPABASE, PLEASE WAIT...</span>
+                            </div>
+                        ) : (
+                            <div style={{fontSize: '3.5rem', fontWeight: 800, margin: '10px 0'}}>
+                                {filteredAndSorted.length.toLocaleString()}
+                            </div>
                         )}
                         <span style={{color: '#94a3b8', fontSize: '12px'}}>RECORDS FOUND</span>
                     </div>
@@ -315,7 +340,11 @@ export default function Dashboard() {
                     <div style={{marginBottom: '10px', display: 'flex', justifyContent: 'space-between'}}>
                         <span
                             style={{fontWeight: 800, fontSize: '11px', color: '#64748b'}}>GEOGRAPHIC DISTRIBUTION</span>
-                        <span style={{fontSize: '11px', color: '#3b82f6', fontWeight: 700}}>LIVE FROM SUPABASE</span>
+                        <span style={{
+                            fontSize: '11px',
+                            color: '#3b82f6',
+                            fontWeight: 700
+                        }}>{loading ? 'SYNCHRONIZING...' : 'LIVE FROM SUPABASE'}</span>
                     </div>
                     <MapComponent incidents={filteredAndSorted}/>
                 </div>
@@ -408,7 +437,11 @@ export default function Dashboard() {
                                             formatter={(value, entry: any) => {
                                                 const p = entry.payload?.integer || 0;
                                                 return (
-                                                    <span style={{color: '#475569', fontSize: '11px', fontWeight: 600}}>{value} ({p}%)</span>
+                                                    <span style={{
+                                                        color: '#475569',
+                                                        fontSize: '11px',
+                                                        fontWeight: 600
+                                                    }}>{value} ({p}%)</span>
                                                 );
                                             }}
                                         />
