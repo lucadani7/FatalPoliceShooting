@@ -115,14 +115,20 @@ def home():
 
 def sync_data_to_supabase():
     CSV_URL = "https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/v2/fatal-police-shootings-data.csv"
-    print(f"Downloading data from: {CSV_URL}")
+    print(f"--- Initializing data sync ---")
+    print(f"Source: {CSV_URL}")
     try:
         storage_options = {'User-Agent': 'Mozilla/5.0'}
         df = pd.read_csv(CSV_URL, storage_options=storage_options)
-        df = df.dropna(subset=['id'])
-        print(f"Loading {len(df)} rows in database...")
-        df.to_sql('incidents', con=engine, if_exists='replace', index=False)
-        print("Data loaded successfully!")
+        print(f"Data downloaded successfully: {len(df)} rows found.")
+        with engine.begin() as connection:
+            models.Base.metadata.create_all(bind=connection)
+            print("Cleaning old data without deleting tabel, for keeping RLS)...")
+            query_sql = text(f"DELETE FROM incidents")
+            connection.execute(query_sql)
+            print("Inserting new data in Supabase...")
+            df.to_sql('incidents', con=connection, if_exists='append', index=False, method='multi', chunksize=1000)
+        print(f"--- Sync successfully! {len(df)} updated rows! ---")
     except Exception as e:
         print(f"Error while sync: {e}")
         raise e
