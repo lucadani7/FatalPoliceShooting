@@ -112,3 +112,20 @@ def home():
         "docs": "/docs",
         "info": "Use /api/stats for graphics data"
     }
+
+def sync_data_to_supabase():
+    CSV_URL = "https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/fatal-police-shootings-data.csv"
+    print(f"Downloading data from: {CSV_URL}")
+    try:
+        df = pd.read_csv(CSV_URL)
+        df = df.dropna(subset=['id'])
+        print(f"Loading {len(df)} rows in database...")
+        df.to_sql('incidents', con=engine, if_exists='replace', index=False)
+        print("Data loaded successfully!")
+    except Exception as e:
+        print(f"Error while sync: {e}")
+        raise e
+
+
+if __name__ == "__main__":
+    sync_data_to_supabase()
