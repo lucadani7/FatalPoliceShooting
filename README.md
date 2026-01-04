@@ -5,7 +5,7 @@ A professional Full-Stack application designed to monitor, visualize, and analyz
 This project is organized as a **monorepo**, utilizing a hybrid infrastructure to balance development efficiency with production-grade stability:
 
 - **Frontend:** Next.js (Deployed on **Vercel**)
-- **Backend:** FastAPI / Python (Deployed on **Render**)
+- **Backend:** FastAPI / Python (Deployed on **GitHub Actions**)
 - **Database:** PostgreSQL 
   - **Production:** Managed by **Supabase** for 24/7 cloud availability.
   - **Local Development:** Isolated environment using **Docker Compose**.
