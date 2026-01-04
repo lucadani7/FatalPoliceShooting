@@ -35,7 +35,15 @@ const MapComponent = dynamic(() => import('../components/Maps'), {
     )
 });
 
-const getPerfectPercentages = (stats: Stat[]) => {
+interface Stat {
+    race: string;
+    count: number;
+    percentage: number;
+
+    [key: string]: string | number;
+}
+
+const getPerfectPercentages = (stats: any[]) => {
     const total = stats.reduce((acc, curr) => acc + curr.count, 0);
     if (total === 0) return stats;
     let seats = stats.map(s => ({
@@ -52,14 +60,6 @@ const getPerfectPercentages = (stats: Stat[]) => {
     }
     return seats.sort((a, b) => b.count - a.count);
 };
-
-interface Stat {
-    race: string;
-    count: number;
-    percentage: number;
-
-    [key: string]: string | number;
-}
 
 const RACE_COLORS: { [key: string]: string } = {
     'White': '#3b82f6', 'Black': '#1f2937', 'Hispanic': '#f97316',
