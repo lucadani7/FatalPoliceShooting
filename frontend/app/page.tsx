@@ -45,7 +45,7 @@ interface Stat {
 
 const raceNames: { [key: string]: string } = {
     'W': 'White', 'B': 'Black', 'H': 'Hispanic', 'B;H': 'Multiracial',
-    'A': 'Asian', 'N': 'Native American', 'O': 'Other', 'None': 'Unknown', 'Unknown': 'Unknown'
+    'A': 'Asian', 'N': 'Native American', 'O': 'Other', 'Unknown': 'Unknown'
 };
 
 const RACE_COLORS: { [key: string]: string } = {
