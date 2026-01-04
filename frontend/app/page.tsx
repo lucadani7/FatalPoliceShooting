@@ -45,7 +45,7 @@ interface Stat {
 
 const raceNames: { [key: string]: string } = {
     'W': 'White', 'B': 'Black', 'H': 'Hispanic', 'B;H': 'Multiracial',
-    'A': 'Asian', 'N': 'Native American', 'O': 'Other', 'Unknown': 'Unknown'
+    'A': 'Asian', 'N': 'Native American', 'O': 'Other', 'Unknown': 'Unknown/Pending'
 };
 
 const RACE_COLORS: { [key: string]: string } = {
@@ -135,16 +135,17 @@ export default function Dashboard() {
                 const statsMap: { [key: string]: number } = {};
                 supabaseData.forEach(item => {
                     const rawRace = item.race;
-                    let r: string;
-                    r = (!rawRace || rawRace.trim().toLowerCase() === "unknown" || rawRace.trim() === "none") ? "Unknown" : rawRace.trim();
-                    statsMap[r] = (statsMap[r] || 0) + 1;
+                    let finalRaceName = !rawRace || rawRace.trim() === "" || rawRace.trim().toLowerCase() === "unknown" || rawRace.trim().toLowerCase() === "none" ? 'Unknown/Pending' : raceNames[rawRace.trim()] || rawRace.trim();
+                    statsMap[finalRaceName] = (statsMap[finalRaceName] || 0) + 1;
                 });
                 const total = supabaseData.length;
-                const formattedStats = Object.keys(statsMap).map(r => ({
-                    race: raceNames[r] || "Unknown",
-                    count: statsMap[r],
-                    percentage: (statsMap[r] / total) * 100
+                const formattedStats = Object.keys(statsMap).map(name => ({
+                    race: name,
+                    count: statsMap[name],
+                    percentage: (statsMap[name] / total) * 100
                 }));
+
+                formattedStats.sort((a, b) => b.count - a.count);
 
                 setData(formattedStats);
                 setIncidents(supabaseData);
