@@ -123,7 +123,8 @@ export default function Dashboard() {
             setLoading(true);
             let query = supabase
                 .from('incidents')
-                .select('*');
+                .select('*')
+                .range(0, 20000);
             if (selectedState !== "All") {
                 query = query.eq('state', selectedState);
             }
