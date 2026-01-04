@@ -54,6 +54,8 @@ const RACE_COLORS: { [key: string]: string } = {
     'Other': '#ef4444', 'Unknown': '#94a3b8'
 };
 
+const statsMap: Record<string, number> = {};
+
 const US_STATES_MAP: { [key: string]: string } = {
     "All": "All States",
     "AL": "Alabama",
@@ -132,7 +134,9 @@ export default function Dashboard() {
             if (!error && supabaseData) {
                 const statsMap: { [key: string]: number } = {};
                 supabaseData.forEach(item => {
-                    const r = item.race || 'Unknown';
+                    const rawRace = item.race;
+                    let r: string;
+                    r = (!rawRace || rawRace.trim().toLowerCase() === "unknown" || rawRace.trim() === "none") ? "Unknown" : rawRace.trim();
                     statsMap[r] = (statsMap[r] || 0) + 1;
                 });
                 const total = supabaseData.length;
@@ -252,7 +256,8 @@ export default function Dashboard() {
                                             style={{color: '#3b82f6', textDecoration: 'none', fontWeight: 600}}>The
                             Washington Post (via GitHub)</a> (2015 - Present)
                             <p>
-                                <em>In cases where information is incomplete in official reports, it is marked as <strong>UNKNOWN</strong>.</em>
+                                <em>In cases where information is incomplete in official reports, it is marked
+                                    as <strong>UNKNOWN</strong>.</em>
                             </p>
                         </p>
                     </div>
