@@ -119,36 +119,36 @@ export default function Dashboard() {
     const rowsPerPage = 10;
 
     useEffect(() => {
-    async function fetchData() {
-        setLoading(true);
-        let query = supabase
-            .from('incidents')
-            .select('*');
-        if (selectedState !== "All") {
-            query = query.eq('state', selectedState);
-        }
-        const { data: supabaseData, error } = await query;
-        if (!error && supabaseData) {
-            const statsMap: { [key: string]: number } = {};
-            supabaseData.forEach(item => {
-                const r = item.race || 'Unknown';
-                statsMap[r] = (statsMap[r] || 0) + 1;
-            });
-            const total = supabaseData.length;
-            const formattedStats = Object.keys(statsMap).map(r => ({
-                race: raceNames[r] || "Unknown",
-                count: statsMap[r],
-                percentage: (statsMap[r] / total) * 100
-            }));
+        async function fetchData() {
+            setLoading(true);
+            let query = supabase
+                .from('incidents')
+                .select('*');
+            if (selectedState !== "All") {
+                query = query.eq('state', selectedState);
+            }
+            const {data: supabaseData, error} = await query;
+            if (!error && supabaseData) {
+                const statsMap: { [key: string]: number } = {};
+                supabaseData.forEach(item => {
+                    const r = item.race || 'Unknown';
+                    statsMap[r] = (statsMap[r] || 0) + 1;
+                });
+                const total = supabaseData.length;
+                const formattedStats = Object.keys(statsMap).map(r => ({
+                    race: raceNames[r] || "Unknown",
+                    count: statsMap[r],
+                    percentage: (statsMap[r] / total) * 100
+                }));
 
-            setData(formattedStats);
-            setIncidents(supabaseData);
+                setData(formattedStats);
+                setIncidents(supabaseData);
+            }
+            setLoading(false);
         }
-        setLoading(false);
-    }
 
-    fetchData();
-}, [selectedState]);
+        fetchData();
+    }, [selectedState]);
 
     const formatSmartPercent = (value: number) => {
         if (value > 0 && value < 0.1) return value.toFixed(2);
@@ -216,20 +216,42 @@ export default function Dashboard() {
             `}</style>
 
             <div className="dashboard-container">
-                <header style={{
-                    marginBottom: '30px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: '20px'
-                }}>
-                    <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
-                        <div>
-                            <h1 style={{fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', margin: 0}}>Fatal
-                                Police Shooting</h1>
-                            <p style={{color: '#64748b', fontSize: '13px', margin: 0}}>Interactive US Data Explorer</p>
-                        </div>
+                <header style={{marginBottom: '30px'}}>
+                    <h1 style={{
+                        fontSize: '2.5rem',
+                        fontWeight: 900,
+                        color: '#0f172a',
+                        letterSpacing: '-0.025em',
+                        marginBottom: '8px'
+                    }}>
+                        Fatal Police Shooting
+                    </h1>
+
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '4px',
+                        borderLeft: '4px solid #3b82f6',
+                        paddingLeft: '15px'
+                    }}>
+                        <p style={{
+                            color: '#64748b',
+                            fontSize: '16px',
+                            fontWeight: 500,
+                            margin: 0
+                        }}>
+                            Interactive US Data Explorer
+                        </p>
+                        <p style={{
+                            color: '#94a3b8',
+                            fontSize: '13px',
+                            margin: 0
+                        }}>
+                            Data Source: <a href="https://github.com/washingtonpost/data-police-shootings"
+                                            target="_blank" rel="noopener noreferrer"
+                                            style={{color: '#3b82f6', textDecoration: 'none', fontWeight: 600}}>The
+                            Washington Post (via GitHub)</a> (2015 - Present)
+                        </p>
                     </div>
                 </header>
 
