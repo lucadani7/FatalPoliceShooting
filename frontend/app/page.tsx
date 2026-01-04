@@ -35,6 +35,24 @@ const MapComponent = dynamic(() => import('../components/Maps'), {
     )
 });
 
+const getPerfectPercentages = (stats: Stat[]) => {
+    const total = stats.reduce((acc, curr) => acc + curr.count, 0);
+    if (total === 0) return stats;
+    let seats = stats.map(s => ({
+        ...s,
+        raw: (s.count / total) * 100,
+        integer: Math.floor((s.count / total) * 100),
+        remainder: ((s.count / total) * 100) % 1
+    }));
+    let currentSum = seats.reduce((acc, curr) => acc + curr.integer, 0);
+    let diff = 100 - currentSum;
+    seats.sort((a, b) => b.remainder - a.remainder);
+    for (let i = 0; i < diff; i++) {
+        seats[i].integer += 1;
+    }
+    return seats.sort((a, b) => b.count - a.count);
+};
+
 interface Stat {
     race: string;
     count: number;
@@ -124,6 +142,7 @@ export default function Dashboard() {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+    const perfectData = useMemo(() => getPerfectPercentages(data), [data]);
     const rowsPerPage = 10;
 
     useEffect(() => {
@@ -368,10 +387,10 @@ export default function Dashboard() {
                                 <ResponsiveContainer>
                                     <PieChart>
                                         <Pie
-                                            data={data}
+                                            data={perfectData}
                                             innerRadius={70}
                                             outerRadius={100}
-                                            dataKey="count"
+                                            dataKey="integer"
                                             nameKey="race"
                                             stroke="none"
                                             paddingAngle={5}
@@ -381,25 +400,15 @@ export default function Dashboard() {
                                             ))}
                                         </Pie>
 
-                                        <Tooltip formatter={(value: any, name: any) => {
-                                            const total = data.reduce((acc, curr) => acc + curr.count, 0);
-                                            const p = total > 0 ? (Number(value) / total) * 100 : 0;
-                                            return [`${value} cases (${p.toFixed(2)}%)`, String(name)];
-                                        }}/>
+                                        <Tooltip formatter={(value: any, name: any) => [`${value}%`, String(name)]}/>
 
                                         <Legend
                                             verticalAlign="bottom"
                                             align="center"
                                             formatter={(value, entry: any) => {
-                                                const total = data.reduce((acc, curr) => acc + curr.count, 0);
-                                                const val = entry.payload.count;
-                                                const p = total > 0 ? (val / total) * 100 : 0;
+                                                const p = entry.payload?.integer || 0;
                                                 return (
-                                                    <span style={{
-                                                        color: '#475569',
-                                                        fontSize: '11px',
-                                                        fontWeight: 600
-                                                    }}>{value} ({p.toFixed(2)}%)</span>
+                                                    <span style={{color: '#475569', fontSize: '11px', fontWeight: 600}}>{value} ({p}%)</span>
                                                 );
                                             }}
                                         />
