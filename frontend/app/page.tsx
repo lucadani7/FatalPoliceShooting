@@ -133,7 +133,7 @@ export default function Dashboard() {
                     'N': 'Native American',
                     'O': 'Other',
                     'Multiracial': 'Multiracial',
-                    'Unknown': 'Unknown/Pending'
+                    'Unknown': 'Unknown'
                 };
                 const statsMap: { [key: string]: number } = {};
                 supabaseData.forEach(item => {
