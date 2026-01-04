@@ -152,8 +152,7 @@ export default function Dashboard() {
     }, [selectedState]);
 
     const formatSmartPercent = (value: number) => {
-        if (value > 0 && value < 0.1) return value.toFixed(2);
-        return parseFloat(value.toFixed(1));
+        return value.toFixed(2);
     };
 
     const exportToCSV = () => {
